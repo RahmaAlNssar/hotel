@@ -92,26 +92,31 @@ class AuthController extends Controller
             return $this->returnError(implode(' , ', $errors), 400);
         }
         
-        JWTAuth::attempt(['email' => $request['email'], 'password' => $request['password']]);
-        $token = Str::random(80);
+    
+     //  $token_api= Str::random(80);
+    //  $token = JWTAuth::attempt($validator->validated());
         $user = User::create([
-            'token'             =>$token,
+                  
             'role'              =>'api_user',
             'name'              => $request['name'],
             'password'          => Hash::make($request['password']),
             'email'             =>$request['email']
         ]);
       
-        
+        $token =  JWTAuth::attempt(['email' => $request['email'], 'password' => $request['password']]);
 
-        // return  response()->json($token, 200);
-        return $this->returnData("Here is a valid token",
-        [
-            'token' => $token,
-            'token_type' => 'bearer',
+        $user->update([
+            'token'             =>$token
+        ]);
+               // return  response()->json($token, 200);
+        // return $this->returnData("Here is a valid token",
+        // [
+        //     'token' => $token,
+        //     'token_type' => 'bearer',
     
-        ],
-        200);
+        // ],
+        // 200);
+        return $this->createNewToken($token);
 
     }
 

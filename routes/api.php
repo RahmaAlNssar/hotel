@@ -14,3 +14,6 @@ use Illuminate\Support\Facades\Route;
    
 
 
+    Route::get('/email/resend', 'VerificationController@resend')->name('verification.resend');
+
+    Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');
